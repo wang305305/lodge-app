@@ -32,8 +32,8 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     console.log("onsubmit")
     console.log(this.loginForm.controls)
-    this.as.checkAuth(this.loginForm.controls.username.value, this.loginForm.controls.password.value)
-    // this.as.get_welcome()
+    //this.as.checkAuth(this.loginForm.controls.username.value, this.loginForm.controls.password.value).subscribe( data => console.log(data));
+    this.as.get_welcome().subscribe( data => console.log(data));
   }
 
 }
