@@ -1,6 +1,8 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -29,6 +31,9 @@ export class RegisterComponent implements OnInit {
       firstName: [''],
       lastName: ['']
     });
+    if (this.as.currentUser) {
+      this.router.navigate(['/']);
+    }
   }
 
   onSubmit(): void {
@@ -42,6 +47,7 @@ export class RegisterComponent implements OnInit {
       "firstName": this.registerForm.controls.firstName.value,
       "lastName": this.registerForm.controls.lastName.value,
     }
+    console.log(body)
     this.as.register(body)
   }
 

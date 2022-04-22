@@ -1,8 +1,10 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-login',
@@ -17,9 +19,9 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private as: AuthService
   ) {
-    // if (this.authenticationService.currentUserValue) {
-    //   this.router.navigate(['/']);
-    // }
+    if (this.as.currentUser) {
+      this.router.navigate(['/']);
+    }
   }
 
   ngOnInit(): void {
@@ -30,10 +32,8 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log("onsubmit")
-    console.log(this.loginForm.controls)
-    //this.as.checkAuth(this.loginForm.controls.username.value, this.loginForm.controls.password.value).subscribe( data => console.log(data));
-    this.as.get_welcome().subscribe( data => console.log(data));
+    this.as.checkAuth(this.loginForm.controls.username.value, this.loginForm.controls.password.value)
+    // this.as.get_welcome().subscribe( data => console.log(data));
   }
 
 }

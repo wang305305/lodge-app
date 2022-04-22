@@ -1,0 +1,6 @@
+.has-image {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.3)), url('/assets/image/lodge3.jpg') center center;
+    background-size: cover;
+}

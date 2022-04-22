@@ -1,0 +1,13 @@
+.has-image {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.15)), url('/assets/image/lodge2.jpg') center center;
+
+
+    background-size: cover;
+}
+
+.title {
+    text-shadow: 0 1px 0 black;
+    font-size: 3rem;
+}
