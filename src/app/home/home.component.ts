@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {JwtHelperService} from '@auth0/angular-jwt';
+import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -6,10 +9,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  constructor(
 
-  constructor() { }
+    ) { }
 
   ngOnInit(): void {
+
   }
 
 }
