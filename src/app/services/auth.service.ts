@@ -25,11 +25,8 @@ export class AuthService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-      Swal.fire(operation + " Failed", error.error, "error")
-      // Let the app keep running by returning an empty result.
+      console.error(error);
+      Swal.fire(operation + " Failed", error.error.message, "error")
       return of(result as T);
     };
   }
@@ -51,13 +48,21 @@ export class AuthService {
       {params : queryParams, withCredentials : true, observe: 'response' as 'response'}
     ).pipe(
       catchError(this.handleError<any>('get user profile', []))
-    ).subscribe((res: HttpResponse<any>) => {
-      console.log('response from server:', res);
-      console.log(res.body)
-      this.setCurrentUser(res.body.user)
+    )
+  }
 
-      //this.router.navigateByUrl('/');
-    });;
+  updateUserProfile(data: any) {
+    return this.http.post(
+      this.api_url + '/updateUserProfile',
+      {
+        "username": data.username,
+        "firstName": data.firstName,
+        "lastName": data.lastName
+      },
+      {withCredentials : true, observe: 'response' as 'response'}
+    ).pipe(
+      catchError(this.handleError<any>('update user profile', []))
+    )
   }
 
   checkAuth(username: string, password: string) {
@@ -74,11 +79,16 @@ export class AuthService {
       catchError(this.handleError<any>('Login', []))
     ).subscribe((res: HttpResponse<any>) => {
       console.log('response from server:', res);
-      this.setCurrentUser(res.body.user)
-      this.cookieService.set( 'user', res.body.user.username );
-      this.isLoggedIn.next(true)
-      Swal.fire("Welcome!", "Login Successful!", "success");
-      this.router.navigateByUrl('/');
+      if (res.ok) {
+        this.setCurrentUser(res.body)
+        this.cookieService.set( 'user', res.body.username );
+        this.isLoggedIn.next(true)
+        Swal.fire("Welcome!", "Login Successful!", "success");
+        this.router.navigateByUrl('/');
+      } else {
+        console.log(res)
+      }
+
     });;
   //   .pipe(map(user => {
   //     console.log(user)
@@ -100,11 +110,16 @@ export class AuthService {
       catchError(this.handleError<any>('register', []))
     ).subscribe((res: HttpResponse<any>) => {
       console.log('response from server:', res);
-      this.setCurrentUser(res.body.user)
-      this.cookieService.set( 'user', res.body.user.username );
+      console.log(res.body)
+      if (res.ok) {
+      this.setCurrentUser(res.body)
+      this.cookieService.set( 'user', res.body.username );
       this.isLoggedIn.next(true)
       Swal.fire("Welcome!", "Register Successful!", "success");
       this.router.navigateByUrl('/');
+      } else {
+        console.log(res)
+      }
     });
   }
 

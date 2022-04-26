@@ -1,0 +1,54 @@
+<div class="columns is-fullheight">
+    <div class="column is-2 is-sidebar-menu is-hidden-mobile">
+        <aside class="menu">
+            <p class="menu-label">
+                General
+            </p>
+            <ul class="menu-list">
+                <li><a>User Info</a></li>
+            </ul>
+        </aside>
+    </div>
+    <div class="column is-main-content">
+
+        <div class="box" *ngIf="currentUser">
+            <h1 class="is-size-1 has-text-centered">
+                Hi, {{currentUser.firstName}} {{currentUser.lastName}}
+            </h1>
+            <h3 class="is-size-3 has-text-centered">
+                User Information:
+            </h3>
+            <div *ngIf="!editProfile">
+                <ul class="is-size-5 has-text-centered">
+                    <li>Username: {{currentUser.username}}</li>
+                    <li>Email Address: {{currentUser.email}}</li>
+                    <li>First Name: {{currentUser.firstName}}</li>
+                    <li>Last Name: {{currentUser.lastName}}</li>
+                </ul>
+                <div class="has-text-centered mt-4">
+                    <button class="button is-info" (click)="toggleEditprofile()">Edit</button>
+                </div>
+            </div>
+            <div *ngIf="editProfile">
+                <form action="" [formGroup]="profileForm">
+                    <ul class="is-size-5 has-text-centered">
+                        <li>Username: {{currentUser.username}}</li>
+                        <li>Email Address: {{currentUser.email}}</li>
+                        <li>First Name: <input formControlName="firstName" type="text" placeholder="e.g. Will"
+                                class="input" size="10" style="width: 200px;"></li>
+                        <li>Last Name: <input formControlName="lastName" type="text" placeholder="e.g. Smith"
+                                class="input" size="10" style="width: 200px;"></li>
+                    </ul>
+                    <div class="is-flex is-flex-direction-row is-justify-content-center">
+                        <div class="has-text-centered mt-4 mr-4">
+                            <button class="button is-info is-light" (click)="toggleEditprofile()">Back</button>
+                        </div>
+                        <div class="has-text-centered mt-4">
+                            <button class="button is-primary" (click)="submitEditProfile()">Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

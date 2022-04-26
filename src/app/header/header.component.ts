@@ -1,3 +1,4 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
@@ -27,7 +28,12 @@ export class HeaderComponent implements OnInit {
       console.log("token valid")
       this.as.isLoggedIn.next(true)
       console.log(this.cookieService.get('user'));
-      this.as.getUserProfile(this.cookieService.get('user'))
+      this.as.getUserProfile(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
+        console.log('response from server:', res);
+        console.log(res.body)
+        this.as.setCurrentUser(res.body.user)
+        //this.router.navigateByUrl('/');
+      });;
     }
   }
 
