@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import Swal from 'sweetalert2';
@@ -21,7 +21,9 @@ export class ProfileComponent implements OnInit {
     private cookieService: CookieService,
     private formBuilder: FormBuilder,
     private is: ImageService,
-    ) { }
+    ) {
+
+    }
 
   ngOnInit(): void {
     console.log(this.cookieService.get('user'))
@@ -39,6 +41,7 @@ export class ProfileComponent implements OnInit {
       console.log(res.body)
       this.profileImage = res.body.img64
       //this.router.navigateByUrl('/');
+      window.scrollTo(0, Number(this.cookieService.get('scroll')));
     });;
   }
 
@@ -74,4 +77,13 @@ export class ProfileComponent implements OnInit {
   refreshImage(img: any) {
     this.profileImage = img
   }
+  
+  @HostListener('window:scroll', ['$event']) // for window scroll events
+  onScroll(event: any) {
+    this.cookieService.set( 'scroll', window.scrollY.toString() );
+  }
+  // onElementScroll(e: any) {
+  //   console.log("scroll!!!!!!!!!!!!!!")
+  //   this.cookieService.set( 'scroll', window.scrollY.toString() );
+  // }
 }
