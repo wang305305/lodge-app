@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
+import { ImageService } from '../services/image.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,19 +15,29 @@ export class ProfileComponent implements OnInit {
   currentUser: any
   editProfile: boolean = false
   profileForm: any;
+  profileImage: any;
   constructor(
     private as: AuthService,
     private cookieService: CookieService,
     private formBuilder: FormBuilder,
+    private is: ImageService,
     ) { }
 
   ngOnInit(): void {
+    console.log(this.cookieService.get('user'))
     this.as.getUserProfile(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
       console.log('response from server:', res);
       console.log(res.body)
       this.as.setCurrentUser(res.body.user)
       this.currentUser = res.body.user
       console.log(this.currentUser)
+      //this.router.navigateByUrl('/');
+    });;
+
+    this.is.getProfileImage(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
+      console.log('response from server:', res);
+      console.log(res.body)
+      this.profileImage = res.body.img64
       //this.router.navigateByUrl('/');
     });;
   }
@@ -58,5 +69,9 @@ export class ProfileComponent implements OnInit {
       this.editProfile = false;
       //this.router.navigateByUrl('/');
     });;
+  }
+
+  refreshImage(img: any) {
+    this.profileImage = img
   }
 }

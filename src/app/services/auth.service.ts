@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http'
 import { environment } from 'src/environments/environment';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, of, Subject } from 'rxjs';
+import { ConnectableObservable, Observable, of, Subject } from 'rxjs';
 import Swal from 'sweetalert2'
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -43,6 +43,7 @@ export class AuthService {
   getUserProfile(username: string) {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("username",username);
+    console.log(queryParams)
     return this.http.get(
       this.api_url + '/getUserProfile',
       {params : queryParams, withCredentials : true, observe: 'response' as 'response'}
@@ -81,9 +82,10 @@ export class AuthService {
       console.log('response from server:', res);
       if (res.ok) {
         this.setCurrentUser(res.body)
-        this.cookieService.set( 'user', res.body.username );
+        this.cookieService.set( 'user', res.body.user.username );
         this.isLoggedIn.next(true)
         Swal.fire("Welcome!", "Login Successful!", "success");
+        console.log(this.cookieService.get('user'))
         this.router.navigateByUrl('/');
       } else {
         console.log(res)

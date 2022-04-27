@@ -15,6 +15,8 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { CookieService } from 'ngx-cookie-service';
 import { ProfileComponent } from './profile/profile.component';
 import { MapComponent } from './map/map.component';
+import { UploadImageComponent } from './upload-image/upload-image.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { MapComponent } from './map/map.component';
     RegisterComponent,
     ProfileComponent,
     MapComponent,
+    UploadImageComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,6 +36,7 @@ import { MapComponent } from './map/map.component';
     ReactiveFormsModule,
     HttpClientModule,
     GoogleMapsModule,
+    FileUploadModule,
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

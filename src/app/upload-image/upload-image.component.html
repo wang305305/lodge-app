@@ -1,0 +1,6 @@
+<form action="" class="box" [formGroup]="imageForm" enctype="multipart/form-data">
+    <div class="field">
+        <label for="image">Upload Image</label>
+        <input type="file" name="uploaded_file" placeholder="Upload file" (change)="uploadImage($event)">
+    </div>
+</form>

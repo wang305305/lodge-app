@@ -15,14 +15,25 @@
             <h1 class="is-size-1 has-text-centered">
                 Hi, {{currentUser.firstName}} {{currentUser.lastName}}
             </h1>
+
             <div class="is-flex is-flex-direction-row is-justify-content-space-evenly">
                 <div class="is-two-fifths" style="margin-left:-50px">
                     <app-map></app-map>
                 </div>
                 <div class="is-half">
+
                     <h3 class="is-size-3 has-text-centered">
                         User Information:
                     </h3>
+                    <div class="columns is-flex is-centered">
+                        <figure class="image is-128x128 is-rounded mt-6" *ngIf="profileImage">
+                             <img src="{{'data:image/jpg;base64,' + profileImage}}" />
+                        </figure>
+                        <figure class="image is-128x128 is-rounded mt-6" *ngIf="!profileImage">
+                            <i class="fa-solid fa-user"></i>
+                       </figure>
+                
+                </div>
                     <div *ngIf="!editProfile">
                         <ul class="is-size-5 has-text-centered">
                             <li>Username: {{currentUser.username}}</li>
@@ -35,6 +46,7 @@
                         </div>
                     </div>
                     <div *ngIf="editProfile">
+                        <app-upload-image (updateImage)="refreshImage($event)"></app-upload-image>
                         <form action="" [formGroup]="profileForm">
                             <ul class="is-size-5 has-text-centered">
                                 <li>Username: {{currentUser.username}}</li>
