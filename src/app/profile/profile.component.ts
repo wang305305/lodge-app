@@ -33,14 +33,12 @@ export class ProfileComponent implements OnInit {
       this.as.setCurrentUser(res.body.user)
       this.currentUser = res.body.user
       console.log(this.currentUser)
-      //this.router.navigateByUrl('/');
     });;
 
     this.is.getProfileImage(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
       console.log('response from server:', res);
       console.log(res.body)
       this.profileImage = res.body.img64
-      //this.router.navigateByUrl('/');
       window.scrollTo(0, Number(this.cookieService.get('scroll')));
     });;
   }

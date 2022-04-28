@@ -1,0 +1,4 @@
+<input type="text" (keyup)="onType($event)" id="ontype" list="auto-complete"/>
+<datalist id="auto-complete">
+    <option *ngFor="let item of resList" [value]="item">{{item}}</option>
+</datalist>

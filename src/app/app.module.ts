@@ -17,6 +17,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { MapComponent } from './map/map.component';
 import { UploadImageComponent } from './upload-image/upload-image.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { SearchboxComponent } from './searchbox/searchbox.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     ProfileComponent,
     MapComponent,
     UploadImageComponent,
+    SearchboxComponent,
   ],
   imports: [
     BrowserModule,

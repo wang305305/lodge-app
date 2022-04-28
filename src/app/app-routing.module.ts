@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { MapComponent } from './map/map.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
+import { SearchboxComponent } from './searchbox/searchbox.component';
 import { UploadImageComponent } from './upload-image/upload-image.component';
 
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'map', component: MapComponent },
   { path: 'upload', component: UploadImageComponent },
+  { path: 'searchbox', component: SearchboxComponent },
 ];
 
 @NgModule({
