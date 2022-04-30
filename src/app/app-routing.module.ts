@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CreateLodgeComponent } from './create-lodge/create-lodge.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { MapComponent } from './map/map.component';
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'map', component: MapComponent },
   { path: 'upload', component: UploadImageComponent },
   { path: 'searchbox', component: SearchboxComponent },
+  { path: 'createLodge', component: CreateLodgeComponent },
 ];
 
 @NgModule({

@@ -1,0 +1,67 @@
+<section class="hero is-primary is-fullheight">
+
+
+
+
+        <form action="" class="box" [formGroup]="lodgeForm" (ngSubmit)="onSubmit()">
+            <h1>Create Lodge</h1>
+            <div class="field">
+                <label for="" class="label">Lodge Name</label>
+                <div class="control has-icons-left">
+                    <input formControlName="lodgeName" type="text" placeholder="e.g. ABC Lodge" class="input" required>
+                    <span class="icon is-small is-left">
+                        <i class="fa-solid fa-user-secret"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <label for="" class="label">Street Address</label>
+                <div class="control has-icons-left">
+                    <input formControlName="streetAddress" type="text" placeholder="e.g. 1 forest street" class="input"
+                        required>
+                    <span class="icon is-small is-left">
+                        <i class="fa fa-envelope"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <label for="" class="label">Municipality</label>
+                <div class="control has-icons-left">
+                    <input formControlName="municipality" type="text" placeholder="e.g. Markham" class="input" required>
+                    <span class="icon is-small is-left">
+                        <i class="fa-solid fa-keyboard"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <label for="" class="label">Province</label>
+                <div class="control has-icons-left">
+                    <input formControlName="province" type="text" placeholder="e.g. Ontario" class="input" required>
+                    <span class="icon is-small is-left">
+                        <i class="fa-solid fa-keyboard"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <label for="" class="label">Country</label>
+                <div class="control has-icons-left">
+                    <input formControlName="country" type="text" placeholder="e.g. Canada" class="input" required>
+                    <span class="icon is-small is-left">
+                        <i class="fa fa-lock"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <label for="" class="checkbox">
+                    <input formControlName="flyIn" type="checkbox">
+                    This is a fly-in lodge.
+                </label>
+            </div>
+            <div class="field">
+                <button class="button is-success">
+                    Create
+                </button>
+            </div>
+        </form>
+
+</section>
