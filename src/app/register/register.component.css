@@ -4,3 +4,9 @@
             rgba(0, 0, 0, 0.3)), url('/assets/image/lodge3.jpg') center center;
     background-size: cover;
 }
+
+.pswd-str {
+    border-radius: 3px;
+    padding: 5px;
+    margin: 5px
+}

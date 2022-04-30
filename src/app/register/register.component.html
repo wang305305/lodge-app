@@ -43,11 +43,12 @@
               <div class="field">
                 <label for="" class="label">Password</label>
                 <div class="control has-icons-left">
-                  <input formControlName="password"  type="password" placeholder="*******" class="input" required>
+                  <input formControlName="password"  type="password" placeholder="*******" class="input" required (keyup)="onType($event)">
                   <span class="icon is-small is-left">
                     <i class="fa fa-lock"></i>
                   </span>
                 </div>
+                <span class="pswd-str" *ngIf="passwordStrength!=''" [ngStyle]="{'background-color': passwordStrength == 'strong' ? 'green' : passwordStrength == 'medium' ? 'yellow' : 'red' }">{{passwordStrength}}</span>
               </div>
               <div class="field">
                 <label for="" class="checkbox">
