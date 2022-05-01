@@ -19,6 +19,8 @@ import { UploadImageComponent } from './upload-image/upload-image.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { SearchboxComponent } from './searchbox/searchbox.component';
 import { CreateLodgeComponent } from './create-lodge/create-lodge.component';
+import { LodgeDetailComponent } from './lodge-detail/lodge-detail.component';
+import { LodgeListComponent } from './lodge-list/lodge-list.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { CreateLodgeComponent } from './create-lodge/create-lodge.component';
     UploadImageComponent,
     SearchboxComponent,
     CreateLodgeComponent,
+    LodgeDetailComponent,
+    LodgeListComponent,
   ],
   imports: [
     BrowserModule,

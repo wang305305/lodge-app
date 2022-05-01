@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateLodgeComponent } from './create-lodge/create-lodge.component';
 import { HomeComponent } from './home/home.component';
+import { LodgeDetailComponent } from './lodge-detail/lodge-detail.component';
+import { LodgeListComponent } from './lodge-list/lodge-list.component';
 import { LoginComponent } from './login/login.component';
 import { MapComponent } from './map/map.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -18,6 +20,8 @@ const routes: Routes = [
   { path: 'upload', component: UploadImageComponent },
   { path: 'searchbox', component: SearchboxComponent },
   { path: 'createLodge', component: CreateLodgeComponent },
+  { path: 'lodgeDetail', component: LodgeDetailComponent },
+  { path: 'lodgeList', component: LodgeListComponent },
 ];
 
 @NgModule({

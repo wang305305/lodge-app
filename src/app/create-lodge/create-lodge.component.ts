@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 import { LodgeService } from '../services/lodge.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-create-lodge',
@@ -16,11 +17,12 @@ export class CreateLodgeComponent implements OnInit {
     private formBuilder: FormBuilder,
     private ls: LodgeService,
     private as: AuthService,
-    private router: Router
+    private router: Router,
+    private cookieService: CookieService,
     ) { }
 
   ngOnInit(): void {
-    if (!this.as.currentUser) {
+    if (!this.cookieService.get('user')) {
       Swal.fire({
         icon: 'error',
         title: 'Access Denied',
