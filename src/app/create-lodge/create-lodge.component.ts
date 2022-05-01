@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { AuthService } from '../services/auth.service';
 import { LodgeService } from '../services/lodge.service';
 
 @Component({
@@ -11,10 +14,20 @@ export class CreateLodgeComponent implements OnInit {
   lodgeForm: any
   constructor(
     private formBuilder: FormBuilder,
-    private ls: LodgeService
+    private ls: LodgeService,
+    private as: AuthService,
+    private router: Router
     ) { }
 
   ngOnInit(): void {
+    if (!this.as.currentUser) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Access Denied',
+        text: 'You need to login as a lodgeowner to access this page!',
+      })
+      this.router.navigateByUrl('/');
+    }
     this.lodgeForm = this.formBuilder.group({
       lodgeName: ['', Validators.required],
       streetAddress: ['', Validators.required],
@@ -27,6 +40,8 @@ export class CreateLodgeComponent implements OnInit {
   
   onSubmit() {
     console.log(this.lodgeForm)
+    let body = this.lodgeForm.value
+    body.owner = this.as.currentUser?.username
     this.ls.createlodge(this.lodgeForm.value)
   }
 }

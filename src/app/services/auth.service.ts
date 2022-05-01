@@ -11,15 +11,17 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root'
 })
 export class AuthService {
-  currentUser: Object | undefined;
-  public isLoggedIn = new Subject();
 
+  currentUser: any | undefined;
+  public isLoggedIn = new Subject();
+  
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private cookieService: CookieService,
-    ) { }
+    ) {
+}
 
   api_url = environment.apiUrl
 
