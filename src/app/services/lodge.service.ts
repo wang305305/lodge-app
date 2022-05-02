@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, Observable, of, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
@@ -9,7 +9,8 @@ import Swal from 'sweetalert2';
   providedIn: 'root'
 })
 export class LodgeService {
-
+  allLodges: any
+  public searchResultLodges = new Subject();
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -50,30 +51,81 @@ export class LodgeService {
     });
   }
 
-  getLodgeByName(lodgeName: string) {
+  getLodges(conditions: any) {
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("lodgeName", lodgeName);
+    queryParams = queryParams.appendAll(conditions);
     console.log(queryParams)
     return this.http.get(
-      this.api_url + '/getLodgeByName',
+      this.api_url + '/getLodges',
       { params: queryParams, withCredentials: true, observe: 'response' as 'response' }
     ).pipe(
-      catchError(this.handleError<any>('getLodgeByName', []))
+      catchError(this.handleError<any>('getLodges', []))
     )
   }
 
-  getLodgeByOwner(owner: string) {
+  autoCompleteLodges(input: any) {
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("owner", owner);
+    queryParams = queryParams.append("input", input);
     console.log(queryParams)
     return this.http.get(
-      this.api_url + '/getLodgeByOwner',
+      this.api_url + '/searchLodges',
       { params: queryParams, withCredentials: true, observe: 'response' as 'response' }
-    ).pipe(
-      catchError(this.handleError<any>('getLodgeByOwner', []))
     )
   }
 
+  searchLodges(conditions: any) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.appendAll(conditions);
+    console.log(queryParams)
+    return this.http.get(
+      this.api_url + '/getLodges',
+      { params: queryParams, withCredentials: true, observe: 'response' as 'response' }
+    ).subscribe((res: HttpResponse<any>) => {
+      console.log('response from server:', res);
+      if (res.ok) {
+        this.searchResultLodges.next(res.body.lodges)
+        console.log(this.searchResultLodges)
+
+      } else {
+        console.error(res)
+      }
+    })
+  }
+
+
+
+  // getLodgeByName(lodgeName: string) {
+  //   let queryParams = new HttpParams();
+  //   queryParams = queryParams.append("lodgeName", lodgeName);
+  //   console.log(queryParams)
+  //   return this.http.get(
+  //     this.api_url + '/getLodgeByName',
+  //     { params: queryParams, withCredentials: true, observe: 'response' as 'response' }
+  //   ).pipe(
+  //     catchError(this.handleError<any>('getLodgeByName', []))
+  //   )
+  // }
+
+  // getLodgeByOwner(owner: string) {
+  //   let queryParams = new HttpParams();
+  //   queryParams = queryParams.append("owner", owner);
+  //   console.log(queryParams)
+  //   return this.http.get(
+  //     this.api_url + '/getLodgeByOwner',
+  //     { params: queryParams, withCredentials: true, observe: 'response' as 'response' }
+  //   ).pipe(
+  //     catchError(this.handleError<any>('getLodgeByOwner', []))
+  //   )
+  // }
+
+  getAllLodges() {
+    return this.http.get(
+      this.api_url + '/getAllLodges',
+      { withCredentials: true, observe: 'response' as 'response' }
+    ).pipe(
+      catchError(this.handleError<any>('getAllLodges', []))
+    )
+  }
   // updateUserProfile(data: any) {
   //   return this.http.post(
   //     this.api_url + '/updateUserProfile',

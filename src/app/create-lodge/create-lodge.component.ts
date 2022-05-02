@@ -36,6 +36,7 @@ export class CreateLodgeComponent implements OnInit {
       municipality: ['', Validators.required],
       province: ['', Validators.required],
       country: ['', Validators.required],
+      startingPrice: [0, Validators.required],
       flyIn: [false]
     });
   }

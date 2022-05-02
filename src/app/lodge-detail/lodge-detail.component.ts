@@ -23,7 +23,7 @@ export class LodgeDetailComponent implements OnInit {
     private activeRoute: ActivatedRoute
     //private is: ImageService,
   ) {
-    console.log(activeRoute.snapshot.queryParams, 'paypal query params');
+    console.log(activeRoute.snapshot.queryParams, 'query params');
   }
 
   // this.router.navigate(['lodgeDetail'], { queryParams: {
@@ -33,10 +33,10 @@ export class LodgeDetailComponent implements OnInit {
   ngOnInit(): void {
     // for non-owner
     if (this.activeRoute.snapshot.queryParams['lodgeName']) {
-      this.ls.getLodgeByName(this.activeRoute.snapshot.queryParams['lodgeName']).subscribe((res: HttpResponse<any>) => {
+      this.ls.getLodges({lodgeName: this.activeRoute.snapshot.queryParams['lodgeName']}).subscribe((res: HttpResponse<any>) => {
         console.log('response from server:', res);
         if (res.ok) {
-          this.lodgeObj = res.body.lodge
+          this.lodgeObj = res.body.lodges[0]
           if (this.lodgeObj.owner == this.as.currentUser?.username) {
             this.allowEdit = true
           }
@@ -46,10 +46,10 @@ export class LodgeDetailComponent implements OnInit {
       });
     } else if (this.activeRoute.snapshot.queryParams['owner']) {
       // for owner
-      this.ls.getLodgeByOwner(this.activeRoute.snapshot.queryParams['owner']).subscribe((res: HttpResponse<any>) => {
+      this.ls.getLodges({owner: this.activeRoute.snapshot.queryParams['owner']}).subscribe((res: HttpResponse<any>) => {
         console.log('response from server:', res);
         if (res.ok) {
-          this.lodgeObj = res.body.lodge
+          this.lodgeObj = res.body.lodges[0]
           if (this.lodgeObj.owner == this.as.currentUser?.username) {
             this.allowEdit = true
           }

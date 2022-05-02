@@ -1,1 +1,21 @@
-<p>lodge-list works!</p>
+<div class="columns lodge-list">
+    <div class="column is-one-quarter has-text-centered" *ngFor="let lodge of lodgeList">
+        <div class="card" style="margin:10px; cursor: pointer;" (click)="toLodgeDetail(lodge.lodgeName)">
+            <div class="card-content">
+                <div class="content is-size-6">
+                    <ul style="list-style-type: none">
+                        <li>Lodge Name: {{lodge.lodgeName}}</li>
+                        <li>Address: {{lodge.streetAddress}}</li>
+                        <li>Municipality: {{lodge.municipality}}</li>
+                        <li>Province: {{lodge.province}}</li>
+                        <li>Canada: {{lodge.country}}</li>
+                        <li>Fly In: {{lodge.flyIn}}</li>
+                        <li>Owner: {{lodge.owner}}</li>
+                        <li>Staring Price: ${{lodge.startingPrice}}/Day</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
