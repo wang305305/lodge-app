@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit {
   editProfile: boolean = false
   profileForm: any;
   profileImage: any;
+  mapData: { type: string;} | undefined = {type:'profile'};
   constructor(
     private as: AuthService,
     private cookieService: CookieService,

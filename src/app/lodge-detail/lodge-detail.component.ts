@@ -14,6 +14,8 @@ import { LodgeService } from '../services/lodge.service';
 export class LodgeDetailComponent implements OnInit {
   lodgeObj: any
   allowEdit: any = false
+  mapData: { type: string; address: string; } | undefined;
+  
   constructor(
     private as: AuthService,
     private cookieService: CookieService,
@@ -37,6 +39,7 @@ export class LodgeDetailComponent implements OnInit {
         console.log('response from server:', res);
         if (res.ok) {
           this.lodgeObj = res.body.lodges[0]
+          this.mapData = {type:"lodge", address: this.lodgeObj.streetAddress + ', ' + this.lodgeObj.municipality + ', ' + this.lodgeObj.province + ', ' + this.lodgeObj.country}
           if (this.lodgeObj.owner == this.as.currentUser?.username) {
             this.allowEdit = true
           }
@@ -50,6 +53,7 @@ export class LodgeDetailComponent implements OnInit {
         console.log('response from server:', res);
         if (res.ok) {
           this.lodgeObj = res.body.lodges[0]
+          this.mapData = {type:"lodge", address: this.lodgeObj.streetAddress + ', ' + this.lodgeObj.municipality + ', ' + this.lodgeObj.province + ', ' + this.lodgeObj.country}
           if (this.lodgeObj.owner == this.as.currentUser?.username) {
             this.allowEdit = true
           }

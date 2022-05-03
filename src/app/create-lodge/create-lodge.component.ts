@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 import { LodgeService } from '../services/lodge.service';
 import { CookieService } from 'ngx-cookie-service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-create-lodge',
@@ -19,17 +20,29 @@ export class CreateLodgeComponent implements OnInit {
     private as: AuthService,
     private router: Router,
     private cookieService: CookieService,
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     if (!this.cookieService.get('user')) {
       Swal.fire({
         icon: 'error',
         title: 'Access Denied',
-        text: 'You need to login as a lodgeowner to access this page!',
+        text: 'You need to login to access this page!',
       })
       this.router.navigateByUrl('/');
+    } else {
+      this.as.getUserProfile(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
+        console.log('response from server:', res);
+        if (!res.body.user.lodgeOwner) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Access Denied',
+            text: 'You need to login as a lodgeowner to access this page!',
+          })
+        }
+      });;
     }
+
     this.lodgeForm = this.formBuilder.group({
       lodgeName: ['', Validators.required],
       streetAddress: ['', Validators.required],
@@ -40,11 +53,33 @@ export class CreateLodgeComponent implements OnInit {
       flyIn: [false]
     });
   }
-  
+
   onSubmit() {
-    console.log(this.lodgeForm)
-    let body = this.lodgeForm.value
-    body.owner = this.as.currentUser?.username
-    this.ls.createlodge(this.lodgeForm.value)
+    this.ls.getLodges({ owner: this.cookieService.get('user') }).subscribe((response: HttpResponse<any>) => {
+      console.log('response from server:', response);
+      if (response.status == 400 || response.body.lodges.length == 0) {
+        console.log("This owner hasn't created a lodge yet")
+        console.log(this.lodgeForm)
+        let body = this.lodgeForm.value
+        body.owner = this.as.currentUser?.username
+        this.ls.createlodge(this.lodgeForm.value)
+      } else {
+        console.log("navigate to this owner's lodge")
+        Swal.fire({
+          title: 'You can only create 1 lodge',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            this.router.navigate(['lodgeDetail'], {
+              queryParams: {
+                owner: this.cookieService.get('user')
+              }
+            });
+          }
+        })
+      }
+    });
   }
 }

@@ -6,6 +6,7 @@ import { ConnectableObservable, Observable, of, Subject } from 'rxjs';
 import Swal from 'sweetalert2'
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { LodgeService } from './lodge.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +15,15 @@ export class AuthService {
 
   currentUser: any | undefined;
   public isLoggedIn = new Subject();
-  
+
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private cookieService: CookieService,
-    ) {
-}
+    private ls: LodgeService,
+  ) {
+  }
 
   api_url = environment.apiUrl
 
@@ -44,11 +46,11 @@ export class AuthService {
 
   getUserProfile(username: string) {
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("username",username);
+    queryParams = queryParams.append("username", username);
     console.log(queryParams)
     return this.http.get(
       this.api_url + '/getUserProfile',
-      {params : queryParams, withCredentials : true, observe: 'response' as 'response'}
+      { params: queryParams, withCredentials: true, observe: 'response' as 'response' }
     ).pipe(
       catchError(this.handleError<any>('get user profile', []))
     )
@@ -62,7 +64,7 @@ export class AuthService {
         "firstName": data.firstName,
         "lastName": data.lastName
       },
-      {withCredentials : true, observe: 'response' as 'response'}
+      { withCredentials: true, observe: 'response' as 'response' }
     ).pipe(
       catchError(this.handleError<any>('update user profile', []))
     )
@@ -77,30 +79,49 @@ export class AuthService {
         "username": username,
         "password": password
       },
-      {withCredentials : true, observe: 'response' as 'response'}
+      { withCredentials: true, observe: 'response' as 'response' }
     ).pipe(
       catchError(this.handleError<any>('Login', []))
     ).subscribe((res: HttpResponse<any>) => {
+      // this api call is structured like: res.body.user.username
       console.log('response from server:', res);
       if (res.ok) {
         this.setCurrentUser(res.body)
-        this.cookieService.set( 'user', res.body.user.username );
+        this.cookieService.set('user', res.body.user.username);
         this.isLoggedIn.next(true)
         Swal.fire("Welcome!", "Login Successful!", "success");
-        console.log(this.cookieService.get('user'))
-        this.router.navigateByUrl('/');
+        if (res.body.user.lodgeOwner) {
+          console.log("yes, this is a lodge owner")
+          this.ls.getLodges({ owner: res.body.user.username }).subscribe((response: HttpResponse<any>) => {
+            console.log('response from server:', response);
+            if (response.status == 400 || response.body.lodges.length == 0) {
+              console.log("no lodge found for this owner")
+              this.router.navigateByUrl('/createLodge');
+            } else {
+              console.log("navigate to this owner's lodge")
+              console.log(res.body)
+              this.router.navigate(['lodgeDetail'], {
+                queryParams: {
+                  owner: res.body.user.username
+                }
+              });
+            }
+          });
+        } else {
+          this.router.navigateByUrl('/');
+        }
       } else {
         console.log(res)
       }
 
     });;
-  //   .pipe(map(user => {
-  //     console.log(user)
-  //     // store user details and jwt token in local storage to keep user logged in between page refreshes
-  //     localStorage.setItem('currentUser', JSON.stringify(user));
-  //     this.currentUser = user;
-  //     return user;
-  // }));
+    //   .pipe(map(user => {
+    //     console.log(user)
+    //     // store user details and jwt token in local storage to keep user logged in between page refreshes
+    //     localStorage.setItem('currentUser', JSON.stringify(user));
+    //     this.currentUser = user;
+    //     return user;
+    // }));
   }
 
   register(body: any) {
@@ -109,20 +130,40 @@ export class AuthService {
     return this.http.post(
       this.api_url + '/register',
       body,
-      {withCredentials : true, observe: 'response' as 'response'}
+      { withCredentials: true, observe: 'response' as 'response' }
     ).pipe(
       catchError(this.handleError<any>('register', []))
     ).subscribe((res: HttpResponse<any>) => {
+      // this api call is structured like: res.body.username
       console.log('response from server:', res);
       console.log(res.body)
       if (res.ok) {
-      this.setCurrentUser(res.body)
-      this.cookieService.set( 'user', res.body.username );
-      this.isLoggedIn.next(true)
-      Swal.fire("Welcome!", "Register Successful!", "success");
-      this.router.navigateByUrl('/');
+        this.setCurrentUser(res.body)
+        this.cookieService.set('user', res.body.username);
+        this.isLoggedIn.next(true)
+        Swal.fire("Welcome!", "Register Successful!", "success");
+        if (res.body.lodgeOwner) {
+          console.log("yes, this is a lodge owner")
+          this.ls.getLodges({ owner: res.body.username }).subscribe((response: HttpResponse<any>) => {
+            console.log('response from server:', response);
+            if (response.status == 400 || response.body.lodges.length == 0) {
+              console.log("no lodge found for this owner")
+              this.router.navigateByUrl('/createLodge');
+            } else {
+              console.log("navigate to this owner's lodge")
+              console.log(res.body)
+              this.router.navigate(['lodgeDetail'], {
+                queryParams: {
+                  owner: res.body.username
+                }
+              });
+            }
+          });
+        } else {
+          this.router.navigateByUrl('/');
+        }        
       } else {
-        console.log(res)
+        console.error(res)
       }
     });
   }
@@ -131,7 +172,7 @@ export class AuthService {
     console.log(this.api_url + '/logout')
     return this.http.post(
       this.api_url + '/logout',
-      {withCredentials : true}
+      { withCredentials: true }
     ).pipe(
       catchError(this.handleError<any>('log out', []))
     ).subscribe((res: HttpResponse<any>) => {
