@@ -51,14 +51,16 @@ export class LodgeDetailComponent implements OnInit {
       // for owner
       this.ls.getLodges({owner: this.activeRoute.snapshot.queryParams['owner']}).subscribe((res: HttpResponse<any>) => {
         console.log('response from server:', res);
-        if (res.ok) {
+        if (res.ok && res.body.lodges.length > 0) {
           this.lodgeObj = res.body.lodges[0]
           this.mapData = {type:"lodge", address: this.lodgeObj.streetAddress + ', ' + this.lodgeObj.municipality + ', ' + this.lodgeObj.province + ', ' + this.lodgeObj.country}
           if (this.lodgeObj.owner == this.as.currentUser?.username) {
             this.allowEdit = true
           }
         } else {
-          console.error(res)
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigateByUrl('/createLodge');
+          });
         }
       });
     }

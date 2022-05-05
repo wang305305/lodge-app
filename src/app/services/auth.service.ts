@@ -88,6 +88,7 @@ export class AuthService {
       if (res.ok) {
         this.setCurrentUser(res.body)
         this.cookieService.set('user', res.body.user.username);
+        this.cookieService.set('token', res.body.token);
         this.isLoggedIn.next(true)
         Swal.fire("Welcome!", "Login Successful!", "success");
         if (res.body.user.lodgeOwner) {
@@ -96,7 +97,9 @@ export class AuthService {
             console.log('response from server:', response);
             if (response.status == 400 || response.body.lodges.length == 0) {
               console.log("no lodge found for this owner")
-              this.router.navigateByUrl('/createLodge');
+              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigateByUrl('/createLodge');
+              });
             } else {
               console.log("navigate to this owner's lodge")
               console.log(res.body)
@@ -149,7 +152,9 @@ export class AuthService {
             console.log('response from server:', response);
             if (response.status == 400 || response.body.lodges.length == 0) {
               console.log("no lodge found for this owner")
-              this.router.navigateByUrl('/createLodge');
+              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigateByUrl('/createLodge');
+              });
             } else {
               console.log("navigate to this owner's lodge")
               console.log(res.body)

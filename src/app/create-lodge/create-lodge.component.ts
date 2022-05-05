@@ -61,7 +61,7 @@ export class CreateLodgeComponent implements OnInit {
         console.log("This owner hasn't created a lodge yet")
         console.log(this.lodgeForm)
         let body = this.lodgeForm.value
-        body.owner = this.as.currentUser?.username
+        body.owner = this.cookieService.get('user')
         this.ls.createlodge(this.lodgeForm.value)
       } else {
         console.log("navigate to this owner's lodge")
