@@ -15,7 +15,7 @@
         <li>Starting Price: ${{lodgeObj.startingPrice}}/Day</li>
       </ul>
       <div class="has-text-centered mt-4">
-        <button class="button is-info" (click)="editLodge()" disabled>Edit</button>
+        <button class="button is-info" *ngIf="allowEdit" (click)="editLodge()" disabled>Edit</button>
       </div>
     </div>
   </div>

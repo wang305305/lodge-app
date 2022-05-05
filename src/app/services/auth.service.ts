@@ -138,13 +138,14 @@ export class AuthService {
       console.log('response from server:', res);
       console.log(res.body)
       if (res.ok) {
-        this.setCurrentUser(res.body)
-        this.cookieService.set('user', res.body.username);
+        this.setCurrentUser(res.body.user)
+        this.cookieService.set('user', res.body.user.username);
+        this.cookieService.set('token', res.body.token);
         this.isLoggedIn.next(true)
         Swal.fire("Welcome!", "Register Successful!", "success");
-        if (res.body.lodgeOwner) {
+        if (res.body.user.lodgeOwner) {
           console.log("yes, this is a lodge owner")
-          this.ls.getLodges({ owner: res.body.username }).subscribe((response: HttpResponse<any>) => {
+          this.ls.getLodges({ owner: res.body.user.username }).subscribe((response: HttpResponse<any>) => {
             console.log('response from server:', response);
             if (response.status == 400 || response.body.lodges.length == 0) {
               console.log("no lodge found for this owner")

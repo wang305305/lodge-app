@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
     private as: AuthService,
     private cookieService: CookieService,
     private router: Router,
-    ) {
+  ) {
   }
 
   ngOnInit(): void {
@@ -47,10 +47,13 @@ export class HeaderComponent implements OnInit {
   }
 
   toLodgeDetail(username: string) {
-    this.router.navigate(['lodgeDetail'], {
-      queryParams: {
-        owner: username
-      }
+    // have to go to dummy route so the lodge detail reload when this func is called
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['lodgeDetail'], {
+        queryParams: {
+          owner: username
+        }
+      });
     });
   }
 }
