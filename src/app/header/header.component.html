@@ -12,6 +12,7 @@
           <div class="buttons">
             <a class="button is-white" routerLink="/register" *ngIf="!(loggedIn)">Sign up</a>
             <a class="button is-white" routerLink="/login" *ngIf="!loggedIn">Log in</a>
+            <a class="button is-white" (click)="toLodgeDetail(currentUser.username)" *ngIf="loggedIn && currentUser.lodgeOwner">My Lodge</a>
             <a class="button is-white" routerLink="/profile" *ngIf="loggedIn">Profile</a>
             <a class="button is-white" (click)="logout()" *ngIf="loggedIn">Log out</a>
           </div>

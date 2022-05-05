@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../services/auth.service';
@@ -12,9 +13,11 @@ import { AuthService } from '../services/auth.service';
 export class HeaderComponent implements OnInit {
   loggedIn: any;
   public jwtHelper: JwtHelperService = new JwtHelperService();
+  currentUser: any;
   constructor(
     private as: AuthService,
     private cookieService: CookieService,
+    private router: Router,
     ) {
   }
 
@@ -32,6 +35,7 @@ export class HeaderComponent implements OnInit {
         console.log('response from server:', res);
         console.log(res.body)
         this.as.setCurrentUser(res.body.user)
+        this.currentUser = res.body.user
         //this.router.navigateByUrl('/');
       });;
     }
@@ -42,4 +46,11 @@ export class HeaderComponent implements OnInit {
     this.as.logout()
   }
 
+  toLodgeDetail(username: string) {
+    this.router.navigate(['lodgeDetail'], {
+      queryParams: {
+        owner: username
+      }
+    });
+  }
 }
