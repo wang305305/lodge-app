@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2'
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private as: AuthService
+    private as: AuthService,
+    private cookieService: CookieService,
   ) {
     if (this.as.currentUser) {
       this.router.navigate(['/']);
@@ -26,13 +28,15 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: [this.cookieService.get('user'), Validators.required],
+      password: ['', Validators.required],
+      rememberme: [false],
     });
+
   }
 
   onSubmit(): void {
-    this.as.checkAuth(this.loginForm.controls.username.value, this.loginForm.controls.password.value)
+    this.as.checkAuth(this.loginForm.controls.username.value, this.loginForm.controls.password.value, this.loginForm.controls.rememberme.value)
     // this.as.get_welcome().subscribe( data => console.log(data));
   }
 

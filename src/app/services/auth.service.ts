@@ -70,8 +70,8 @@ export class AuthService {
     )
   }
 
-  checkAuth(username: string, password: string) {
-    console.log(username, password)
+  checkAuth(username: string, password: string, rememberme: boolean) {
+    console.log(username, password, rememberme)
     console.log(this.api_url + '/login')
     return this.http.post(
       this.api_url + '/login',
@@ -92,6 +92,9 @@ export class AuthService {
         this.setToSession('user', res.body.user.username, 5)
         this.setToSession('token', res.body.token, 5)
         this.isLoggedIn.next(true)
+        if (rememberme) {
+          this.cookieService.set('user', res.body.user.username);
+        }
         Swal.fire("Welcome!", "Login Successful!", "success");
         if (res.body.user.lodgeOwner) {
           console.log("yes, this is a lodge owner")
