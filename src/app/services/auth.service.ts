@@ -87,8 +87,10 @@ export class AuthService {
       console.log('response from server:', res);
       if (res.ok) {
         this.setCurrentUser(res.body)
-        this.cookieService.set('user', res.body.user.username);
-        this.cookieService.set('token', res.body.token);
+        // this.cookieService.set('user', res.body.user.username);
+        // this.cookieService.set('token', res.body.token);
+        this.setToSession('user', res.body.user.username, 5)
+        this.setToSession('token', res.body.token, 5)
         this.isLoggedIn.next(true)
         Swal.fire("Welcome!", "Login Successful!", "success");
         if (res.body.user.lodgeOwner) {
@@ -142,8 +144,10 @@ export class AuthService {
       console.log(res.body)
       if (res.ok) {
         this.setCurrentUser(res.body.user)
-        this.cookieService.set('user', res.body.user.username);
-        this.cookieService.set('token', res.body.token);
+        // this.cookieService.set('user', res.body.user.username);
+        // this.cookieService.set('token', res.body.token);
+        this.setToSession('user', res.body.user.username, 5)
+        this.setToSession('token', res.body.token, 5)
         this.isLoggedIn.next(true)
         Swal.fire("Welcome!", "Register Successful!", "success");
         if (res.body.user.lodgeOwner) {
@@ -187,8 +191,10 @@ export class AuthService {
         console.log('response from server:', res);
         this.setCurrentUser(undefined)
         this.isLoggedIn.next(false)
-        this.cookieService.delete('token');
-        this.cookieService.delete('user');
+        // this.cookieService.delete('token');
+        // this.cookieService.delete('user');
+        sessionStorage.removeItem('user')
+        sessionStorage.removeItem('token')
         Swal.fire("Bye", "Logged out!", "success");
         this.router.navigateByUrl('/');
       } else {
@@ -199,5 +205,14 @@ export class AuthService {
 
   setCurrentUser(user: any) {
     this.currentUser = user;
+  }
+
+  setToSession(key: string, value: any, lifespan: any) {
+    let expiredAt = new Date().getTime() + (60000 * lifespan); // lifespan in min
+    let obj = {
+      value: value,
+      expiredAt: expiredAt
+    }
+    sessionStorage.setItem(key, JSON.stringify(obj));
   }
 }

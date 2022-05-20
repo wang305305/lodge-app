@@ -25,13 +25,13 @@ export class HeaderComponent implements OnInit {
 
     this.as.isLoggedIn.subscribe(res => this.loggedIn = res);
 
-    if (this.jwtHelper.isTokenExpired(document.cookie.slice(6,))) {
-      console.log("token expired")
-    } else {
-      console.log("token valid")
-      this.as.isLoggedIn.next(true)
-      console.log(this.cookieService.get('user'));
-      this.as.getUserProfile(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
+    let sessionUser = sessionStorage.getItem('user')
+    if (sessionUser) {
+      let now = new Date()
+      if (now.getTime() < JSON.parse(sessionUser).expiredAt) {
+        this.as.isLoggedIn.next(true)
+      }
+      this.as.getUserProfile(JSON.parse(sessionUser).value).subscribe((res: HttpResponse<any>) => {
         console.log('response from server:', res);
         console.log(res.body)
         this.as.setCurrentUser(res.body.user)
@@ -39,6 +39,20 @@ export class HeaderComponent implements OnInit {
         //this.router.navigateByUrl('/');
       });;
     }
+    // if (this.jwtHelper.isTokenExpired(document.cookie.slice(6,))) {
+    //   console.log("token expired")
+    // } else {
+    //   console.log("token valid")
+    //   this.as.isLoggedIn.next(true)
+
+    //   this.as.getUserProfile(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
+    //     console.log('response from server:', res);
+    //     console.log(res.body)
+    //     this.as.setCurrentUser(res.body.user)
+    //     this.currentUser = res.body.user
+    //     //this.router.navigateByUrl('/');
+    //   });;
+    // }
   }
 
   logout() {

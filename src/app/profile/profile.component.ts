@@ -27,21 +27,26 @@ export class ProfileComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    console.log(this.cookieService.get('user'))
-    this.as.getUserProfile(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
-      console.log('response from server:', res);
-      console.log(res.body)
-      this.as.setCurrentUser(res.body.user)
-      this.currentUser = res.body.user
-      console.log(this.currentUser)
-    });;
-
-    this.is.getProfileImage(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
-      console.log('response from server:', res);
-      console.log(res.body)
-      this.profileImage = res.body.img64
-      window.scrollTo(0, Number(this.cookieService.get('scroll')));
-    });;
+    console.log(sessionStorage.getItem('user'))
+    let sessionUser = sessionStorage.getItem('user')
+    if (sessionUser) {
+      this.as.getUserProfile(JSON.parse(sessionUser).value).subscribe((res: HttpResponse<any>) => {
+        console.log('response from server:', res);
+        console.log(res.body)
+        this.as.setCurrentUser(res.body.user)
+        this.currentUser = res.body.user
+        console.log(this.currentUser)
+      });;
+  
+      this.is.getProfileImage(JSON.parse(sessionUser).value).subscribe((res: HttpResponse<any>) => {
+        console.log('response from server:', res);
+        console.log(res.body)
+        this.profileImage = res.body.img64
+        window.scrollTo(0, Number(this.cookieService.get('scroll')));
+      });;
+    } else {
+      console.log("cannot find user data in session")
+    }
   }
 
   toggleEditprofile() {

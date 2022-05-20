@@ -16,6 +16,7 @@ export class UploadImageComponent implements OnInit {
   imageForm: any;
   currentUser: string | undefined;
   @Output() updateImage = new EventEmitter<string>();
+  sessionUser: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,10 +27,12 @@ export class UploadImageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentUser = this.cookieService.get('user')
-    this.imageForm = this.formBuilder.group({
-      img: ['', Validators.required],
-    });
+    this.sessionUser = sessionStorage.getItem('user')
+    if (this.sessionUser) {
+      this.imageForm = this.formBuilder.group({
+        img: ['', Validators.required],
+      });
+    }
   }
   uploadImage(event: any) {
     console.log("onsubmit")
@@ -40,12 +43,12 @@ export class UploadImageComponent implements OnInit {
       let file: File = fileList[0];
       console.log(file)
       let formData: FormData = new FormData();
-      formData.append('username', this.cookieService.get('user'));
+      formData.append('username', JSON.parse(this.sessionUser).value);
       formData.append('uploaded_file', file);
 
       this.is.uploadProfileImage(formData).subscribe(res => {
         console.log("uploadProfileImage finished " + res)
-        this.is.getProfileImage(this.cookieService.get('user')).subscribe(res => {
+        this.is.getProfileImage(JSON.parse(this.sessionUser).value).subscribe(res => {
           console.log(res)
           this.updateImage.emit(res.body.img64);
           Swal.fire("Success!", "Update Profile Image Successful!", "success");

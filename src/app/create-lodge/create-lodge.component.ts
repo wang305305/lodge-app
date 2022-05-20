@@ -14,6 +14,7 @@ import { HttpResponse } from '@angular/common/http';
 })
 export class CreateLodgeComponent implements OnInit {
   lodgeForm: any
+  sessionUser: any;
   constructor(
     private formBuilder: FormBuilder,
     private ls: LodgeService,
@@ -23,7 +24,8 @@ export class CreateLodgeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (!this.cookieService.get('user')) {
+    this.sessionUser = sessionStorage.getItem('user')
+    if (!this.sessionUser) {
       Swal.fire({
         icon: 'error',
         title: 'Access Denied',
@@ -31,7 +33,7 @@ export class CreateLodgeComponent implements OnInit {
       })
       this.router.navigateByUrl('/');
     } else {
-      this.as.getUserProfile(this.cookieService.get('user')).subscribe((res: HttpResponse<any>) => {
+      this.as.getUserProfile(JSON.parse(this.sessionUser).value).subscribe((res: HttpResponse<any>) => {
         console.log('response from server:', res);
         if (!res.body.user.lodgeOwner) {
           Swal.fire({
@@ -55,13 +57,13 @@ export class CreateLodgeComponent implements OnInit {
   }
 
   onSubmit() {
-    this.ls.getLodges({ owner: this.cookieService.get('user') }).subscribe((response: HttpResponse<any>) => {
+    this.ls.getLodges({ owner: JSON.parse(this.sessionUser).value }).subscribe((response: HttpResponse<any>) => {
       console.log('response from server:', response);
       if (response.status == 400 || response.body.lodges.length == 0) {
         console.log("This owner hasn't created a lodge yet")
         console.log(this.lodgeForm)
         let body = this.lodgeForm.value
-        body.owner = this.cookieService.get('user')
+        body.owner = JSON.parse(this.sessionUser).value
         this.ls.createlodge(this.lodgeForm.value)
       } else {
         console.log("navigate to this owner's lodge")
@@ -70,11 +72,10 @@ export class CreateLodgeComponent implements OnInit {
           icon: 'error',
           confirmButtonText: 'OK',
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
             this.router.navigate(['lodgeDetail'], {
               queryParams: {
-                owner: this.cookieService.get('user')
+                owner: JSON.parse(this.sessionUser).value
               }
             });
           }
