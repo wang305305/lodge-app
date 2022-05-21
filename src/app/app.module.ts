@@ -11,6 +11,7 @@ import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { StarRatingModule } from 'angular-star-rating';
 
 import { CookieService } from 'ngx-cookie-service';
 import { ProfileComponent } from './profile/profile.component';
@@ -45,6 +46,7 @@ import { LodgeListComponent } from './lodge-list/lodge-list.component';
     HttpClientModule,
     GoogleMapsModule,
     FileUploadModule,
+    StarRatingModule.forRoot(),
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

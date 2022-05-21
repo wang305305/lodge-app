@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { RESTORED_VIEW_CONTEXT_NAME } from '@angular/compiler/src/render3/view/util';
-import { Component, OnInit } from '@angular/core';
+import { Attribute, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -18,7 +18,9 @@ export class LodgeDetailComponent implements OnInit {
   allowEdit: any = false
   mapData: { type: string; address: string; } | undefined;
   reviewForm: any;
-  
+  avg_rating: number | undefined;
+  rated: any;
+
   constructor(
     private as: AuthService,
     private cookieService: CookieService,
@@ -38,11 +40,13 @@ export class LodgeDetailComponent implements OnInit {
   ngOnInit(): void {
     // for non-owner
     if (this.activeRoute.snapshot.queryParams['lodgeName']) {
-      this.ls.getLodges({lodgeName: this.activeRoute.snapshot.queryParams['lodgeName']}).subscribe((res: HttpResponse<any>) => {
+      this.ls.getLodges({ lodgeName: this.activeRoute.snapshot.queryParams['lodgeName'] }).subscribe((res: HttpResponse<any>) => {
         console.log('response from server:', res);
         if (res.ok) {
           this.lodgeObj = res.body.lodges[0]
-          this.mapData = {type:"lodge", address: this.lodgeObj.streetAddress + ', ' + this.lodgeObj.municipality + ', ' + this.lodgeObj.province + ', ' + this.lodgeObj.country}
+          this.avg_rating = this.calc_avg_rating(this.lodgeObj.ratings.attributes)
+          this.rated = this.lodgeObj.ratings.attributes.filter((e: { user: any; }) => e.user==this.as.currentUser?.username).length > 0
+          this.mapData = { type: "lodge", address: this.lodgeObj.streetAddress + ', ' + this.lodgeObj.municipality + ', ' + this.lodgeObj.province + ', ' + this.lodgeObj.country }
           if (this.lodgeObj.owner == this.as.currentUser?.username) {
             this.allowEdit = true
           }
@@ -52,11 +56,13 @@ export class LodgeDetailComponent implements OnInit {
       });
     } else if (this.activeRoute.snapshot.queryParams['owner']) {
       // for owner
-      this.ls.getLodges({owner: this.activeRoute.snapshot.queryParams['owner']}).subscribe((res: HttpResponse<any>) => {
+      this.ls.getLodges({ owner: this.activeRoute.snapshot.queryParams['owner'] }).subscribe((res: HttpResponse<any>) => {
         console.log('response from server:', res);
         if (res.ok && res.body.lodges.length > 0) {
           this.lodgeObj = res.body.lodges[0]
-          this.mapData = {type:"lodge", address: this.lodgeObj.streetAddress + ', ' + this.lodgeObj.municipality + ', ' + this.lodgeObj.province + ', ' + this.lodgeObj.country}
+          this.avg_rating = this.calc_avg_rating(this.lodgeObj.ratings.attributes)
+          this.rated = this.lodgeObj.ratings.attributes.filter((e: { user: any; }) => e.user==this.as.currentUser?.username).length > 0
+          this.mapData = { type: "lodge", address: this.lodgeObj.streetAddress + ', ' + this.lodgeObj.municipality + ', ' + this.lodgeObj.province + ', ' + this.lodgeObj.country }
           if (this.lodgeObj.owner == this.as.currentUser?.username) {
             this.allowEdit = true
           }
@@ -70,6 +76,7 @@ export class LodgeDetailComponent implements OnInit {
     this.reviewForm = this.formBuilder.group({
       review: ['', Validators.required]
     });
+
   }
 
   editLodge() {
@@ -77,26 +84,75 @@ export class LodgeDetailComponent implements OnInit {
   }
 
   submitReview() {
-    
-    let filter = {"lodgeName": "ron lodge"}
+
+    let filter = { "lodgeName": this.lodgeObj.lodgeName }
     let update
     if (!this.lodgeObj.reviews) {
-      update = {"reviews": [this.reviewForm.controls.review.value]}
-    }else {
+      update = { "reviews": [this.reviewForm.controls.review.value] }
+    } else {
       this.lodgeObj.reviews.push(this.reviewForm.controls.review.value)
-      update = {"reviews": this.lodgeObj.reviews}
+      update = { "reviews": this.lodgeObj.reviews }
     }
     console.log("update", update)
     this.ls.updateLodges(filter, update).subscribe((res: HttpResponse<any>) => {
-        console.log('response from server:', res);
-        if (res.ok) {
-          Swal.fire("Success!", "Submit Review Successful!", "success");
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Failed to submit review'
-          })
-        }
-      });
+      console.log('response from server:', res);
+      if (res.ok) {
+        Swal.fire("Success!", "Submit Review Successful!", "success");
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to submit review'
+        })
+      }
+    });
   }
+
+  onClickStar(event: any) {
+    console.log(event.rating)
+    let filter = { "lodgeName": this.lodgeObj.lodgeName }
+    let update
+    if (!this.lodgeObj.ratings) {
+      update = {
+        "ratings":
+        {
+          "attributes": [{
+            user: this.as.currentUser?.username,
+            rating: event.rating
+          }]
+        }
+
+      }
+    } else {
+      this.lodgeObj.ratings.attributes.push(
+        {
+          user: this.as.currentUser?.username,
+          rating: event.rating
+        }
+      )
+      console.log(this.lodgeObj.ratings)
+      update = { "ratings": this.lodgeObj.ratings }
+    }
+    console.log("update", update)
+    this.ls.updateLodges(filter, update).subscribe((res: HttpResponse<any>) => {
+      console.log('response from server:', res);
+      if (res.ok) {
+        Swal.fire("Success!", "Submit rating Successful!", "success");
+        this.avg_rating = this.calc_avg_rating(this.lodgeObj.ratings.attributes)
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to submit rating'
+        })
+      }
+    });
+  }
+
+  calc_avg_rating(array: any) {
+    let sum = 0
+    array.forEach((element: any) => {
+      sum = sum + element.rating
+    });
+    return sum / array.length
+  }
+
 }
