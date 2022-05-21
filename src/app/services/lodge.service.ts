@@ -63,6 +63,17 @@ export class LodgeService {
     )
   }
 
+  updateLodges(filter: any, update: any) {
+    let body = {"filter":filter, "update": update}
+    return this.http.patch(
+      this.api_url + '/updateLodge',
+      body,
+      { withCredentials: true, observe: 'response' as 'response' }
+    ).pipe(
+      catchError(this.handleError<any>('updateLodge', []))
+    )
+  }
+
   autoCompleteLodges(input: any) {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("input", input);

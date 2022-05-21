@@ -1,8 +1,10 @@
 import { HttpResponse } from '@angular/common/http';
+import { RESTORED_VIEW_CONTEXT_NAME } from '@angular/compiler/src/render3/view/util';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 import { LodgeService } from '../services/lodge.service';
 
@@ -15,6 +17,7 @@ export class LodgeDetailComponent implements OnInit {
   lodgeObj: any
   allowEdit: any = false
   mapData: { type: string; address: string; } | undefined;
+  reviewForm: any;
   
   constructor(
     private as: AuthService,
@@ -64,12 +67,36 @@ export class LodgeDetailComponent implements OnInit {
         }
       });
     }
-
-
+    this.reviewForm = this.formBuilder.group({
+      review: ['', Validators.required]
+    });
   }
 
   editLodge() {
     console.log("editLodge")
   }
 
+  submitReview() {
+    
+    let filter = {"lodgeName": "ron lodge"}
+    let update
+    if (!this.lodgeObj.reviews) {
+      update = {"reviews": [this.reviewForm.controls.review.value]}
+    }else {
+      this.lodgeObj.reviews.push(this.reviewForm.controls.review.value)
+      update = {"reviews": this.lodgeObj.reviews}
+    }
+    console.log("update", update)
+    this.ls.updateLodges(filter, update).subscribe((res: HttpResponse<any>) => {
+        console.log('response from server:', res);
+        if (res.ok) {
+          Swal.fire("Success!", "Submit Review Successful!", "success");
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to submit review'
+          })
+        }
+      });
+  }
 }
