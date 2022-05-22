@@ -11,6 +11,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
 import { SearchboxComponent } from './searchbox/searchbox.component';
 import { UploadImageComponent } from './upload-image/upload-image.component';
+import { WishListComponent } from './wish-list/wish-list.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'createLodge', component: CreateLodgeComponent, canActivate: [AuthGuard]},
   { path: 'lodgeDetail', component: LodgeDetailComponent },
   { path: 'lodgeList', component: LodgeListComponent },
+  { path: 'wishList', component: WishListComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

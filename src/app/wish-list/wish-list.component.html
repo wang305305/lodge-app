@@ -1,0 +1,11 @@
+<div class="content has-text-centered" *ngIf="wishList && wishList.length==0">
+<h2>You have nothing in your wish list</h2>
+</div>
+<div class="content has-text-centered" *ngIf="wishList && wishList.length!=0">
+    <h1>Wish List</h1>
+
+    <ul style="list-style-type: none" *ngFor="let lodgeName of wishList">
+        <li>{{lodgeName}}</li>
+        <button class="button is-info" (click)="remove(lodgeName)">remove</button>
+      </ul>
+</div>

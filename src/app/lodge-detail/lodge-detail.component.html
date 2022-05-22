@@ -5,6 +5,10 @@
   <div class="is-half">
     <div class="content has-text-centered" *ngIf="lodgeObj">
       <h1>Welcome to {{lodgeObj.lodgeName}}</h1>
+      <span  *ngIf="currentUser">
+        <button class="button is-success" *ngIf="!added" ><a (click)="addToWishList(lodgeObj.lodgeName)" style="color:white">Add to Wish List</a></button>
+        <button class="button is-danger" *ngIf="added" ><a (click)="removeFromWishList(lodgeObj.lodgeName)" style="color:white">remove From Wish List</a></button>
+      </span>
       <ul style="list-style-type: none">
         <li>Address: {{lodgeObj.streetAddress}}</li>
         <li>Municipality: {{lodgeObj.municipality}}</li>
@@ -21,7 +25,7 @@
         <h2>Reviews</h2>
         <star-rating [starType]="'svg'" [rating]="avg_rating" (starClickChange)="onClickStar($event)" [disabled]="rated"></star-rating>
         <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
-          <input class="input" type="text" placeholder="Text input" formControlName="review">
+          <input class="input" type="text" placeholder="Pls input your review here" formControlName="review">
           <span><button class="button" type="submit" style="margin-top:5px">Submit</button></span>
         </form>
         <ul *ngFor="let review of lodgeObj.reviews">

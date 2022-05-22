@@ -7,6 +7,7 @@ import { CookieService } from 'ngx-cookie-service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 import { LodgeService } from '../services/lodge.service';
+import { WishlistService } from '../services/wishlist.service';
 
 @Component({
   selector: 'app-lodge-detail',
@@ -20,12 +21,16 @@ export class LodgeDetailComponent implements OnInit {
   reviewForm: any;
   avg_rating: number | undefined;
   rated: any;
+  loggedIn: unknown;
+  currentUser: any;
+  added: boolean | undefined;
 
   constructor(
     private as: AuthService,
     private cookieService: CookieService,
     private formBuilder: FormBuilder,
     private ls: LodgeService,
+    private wls: WishlistService,
     private router: Router,
     private activeRoute: ActivatedRoute
     //private is: ImageService,
@@ -38,6 +43,16 @@ export class LodgeDetailComponent implements OnInit {
   // }});
 
   ngOnInit(): void {
+    this.as.isLoggedIn.subscribe(res => this.loggedIn = res);
+
+    let sessionUser = sessionStorage.getItem('user')
+    if (sessionUser) {
+      let now = new Date()
+      if (now.getTime() < JSON.parse(sessionUser).expiredAt) {
+        this.as.isLoggedIn.next(true)
+        this.currentUser = JSON.parse(sessionUser).value
+      }
+    }
     // for non-owner
     if (this.activeRoute.snapshot.queryParams['lodgeName']) {
       this.ls.getLodges({ lodgeName: this.activeRoute.snapshot.queryParams['lodgeName'] }).subscribe((res: HttpResponse<any>) => {
@@ -49,6 +64,9 @@ export class LodgeDetailComponent implements OnInit {
           this.mapData = { type: "lodge", address: this.lodgeObj.streetAddress + ', ' + this.lodgeObj.municipality + ', ' + this.lodgeObj.province + ', ' + this.lodgeObj.country }
           if (this.lodgeObj.owner == this.as.currentUser?.username) {
             this.allowEdit = true
+          }
+          if (this.currentUser) {
+            this.checkIfLodgeInWishList()
           }
         } else {
           console.error(res)
@@ -65,6 +83,9 @@ export class LodgeDetailComponent implements OnInit {
           this.mapData = { type: "lodge", address: this.lodgeObj.streetAddress + ', ' + this.lodgeObj.municipality + ', ' + this.lodgeObj.province + ', ' + this.lodgeObj.country }
           if (this.lodgeObj.owner == this.as.currentUser?.username) {
             this.allowEdit = true
+          }
+          if (this.currentUser) {
+            this.checkIfLodgeInWishList()
           }
         } else {
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
@@ -155,4 +176,49 @@ export class LodgeDetailComponent implements OnInit {
     return sum / array.length
   }
 
+  addToWishList(lodgeName: any) {
+    this.wls.addToWishList(lodgeName, this.currentUser).subscribe((res: HttpResponse<any>) => {
+      console.log('response from server:', res);
+      if (res.ok) {
+        this.added = true
+        Swal.fire("Success!", "Added To Wish List", "success");
+
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to add to Wish List'
+        })
+      }
+    });
+  }
+
+  removeFromWishList(lodgeName: any) {
+    this.wls.removeFromWishList(lodgeName, this.currentUser).subscribe((res: HttpResponse<any>) => {
+      console.log('response from server:', res);
+      if (res.ok) {
+        this.added = false
+        Swal.fire("Success!", "Removed From Wish List", "success");
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to remove from Wish List'
+        })
+      }
+    });
+  }
+
+  checkIfLodgeInWishList() {
+    this.wls.isLodgeInWishList(this.lodgeObj.lodgeName, this.currentUser).subscribe((res: HttpResponse<any>) => {
+      console.log("!!!!!!!!!!!!!!")
+      console.log('response from server:', res);
+      if (res.ok) {
+        this.added = res.body.added
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to check lodge in Wish List'
+        })
+      }
+    });
+  }
 }

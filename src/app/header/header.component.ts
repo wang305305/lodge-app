@@ -30,6 +30,10 @@ export class HeaderComponent implements OnInit {
       let now = new Date()
       if (now.getTime() < JSON.parse(sessionUser).expiredAt) {
         this.as.isLoggedIn.next(true)
+      } else {
+        console.log("unauthorized")
+        sessionStorage.removeItem('user')
+        sessionStorage.removeItem('token')
       }
       this.as.getUserProfile(JSON.parse(sessionUser).value).subscribe((res: HttpResponse<any>) => {
         console.log('response from server:', res);

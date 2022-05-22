@@ -22,6 +22,7 @@ import { SearchboxComponent } from './searchbox/searchbox.component';
 import { CreateLodgeComponent } from './create-lodge/create-lodge.component';
 import { LodgeDetailComponent } from './lodge-detail/lodge-detail.component';
 import { LodgeListComponent } from './lodge-list/lodge-list.component';
+import { WishListComponent } from './wish-list/wish-list.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { LodgeListComponent } from './lodge-list/lodge-list.component';
     CreateLodgeComponent,
     LodgeDetailComponent,
     LodgeListComponent,
+    WishListComponent,
   ],
   imports: [
     BrowserModule,
