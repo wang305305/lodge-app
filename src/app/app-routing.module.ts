@@ -7,6 +7,7 @@ import { LodgeDetailComponent } from './lodge-detail/lodge-detail.component';
 import { LodgeListComponent } from './lodge-list/lodge-list.component';
 import { LoginComponent } from './login/login.component';
 import { MapComponent } from './map/map.component';
+import { PaypalComponent } from './paypal/paypal.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
 import { SearchboxComponent } from './searchbox/searchbox.component';
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'lodgeDetail', component: LodgeDetailComponent },
   { path: 'lodgeList', component: LodgeListComponent },
   { path: 'wishList', component: WishListComponent, canActivate: [AuthGuard]},
+  { path: 'paypal', component: PaypalComponent},
 ];
 
 @NgModule({

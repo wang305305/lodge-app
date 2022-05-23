@@ -209,7 +209,6 @@ export class LodgeDetailComponent implements OnInit {
 
   checkIfLodgeInWishList() {
     this.wls.isLodgeInWishList(this.lodgeObj.lodgeName, this.currentUser).subscribe((res: HttpResponse<any>) => {
-      console.log("!!!!!!!!!!!!!!")
       console.log('response from server:', res);
       if (res.ok) {
         this.added = res.body.added

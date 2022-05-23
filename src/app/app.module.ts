@@ -23,6 +23,8 @@ import { CreateLodgeComponent } from './create-lodge/create-lodge.component';
 import { LodgeDetailComponent } from './lodge-detail/lodge-detail.component';
 import { LodgeListComponent } from './lodge-list/lodge-list.component';
 import { WishListComponent } from './wish-list/wish-list.component';
+import { PaypalComponent } from './paypal/paypal.component';
+import { NgxPayPalModule } from 'ngx-paypal';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import { WishListComponent } from './wish-list/wish-list.component';
     LodgeDetailComponent,
     LodgeListComponent,
     WishListComponent,
+    PaypalComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +52,7 @@ import { WishListComponent } from './wish-list/wish-list.component';
     GoogleMapsModule,
     FileUploadModule,
     StarRatingModule.forRoot(),
+    NgxPayPalModule,
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

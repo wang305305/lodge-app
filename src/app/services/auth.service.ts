@@ -94,6 +94,8 @@ export class AuthService {
         this.isLoggedIn.next(true)
         if (rememberme) {
           this.cookieService.set('user', res.body.user.username);
+        } else {
+          this.cookieService.delete('user');
         }
         Swal.fire("Welcome!", "Login Successful!", "success");
         if (res.body.user.lodgeOwner) {

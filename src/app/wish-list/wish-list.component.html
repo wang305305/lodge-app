@@ -1,11 +1,21 @@
 <div class="content has-text-centered" *ngIf="wishList && wishList.length==0">
-<h2>You have nothing in your wish list</h2>
+    <h2>You have nothing in your wish list</h2>
 </div>
 <div class="content has-text-centered" *ngIf="wishList && wishList.length!=0">
     <h1>Wish List</h1>
-
-    <ul style="list-style-type: none" *ngFor="let lodgeName of wishList">
-        <li>{{lodgeName}}</li>
-        <button class="button is-info" (click)="remove(lodgeName)">remove</button>
-      </ul>
+    <div class="box">
+        <ul style="list-style-type: none; font-size: large;" *ngFor="let lodgeName of wishList">
+            <div class="is-flex is-flex-direction-row is-justify-content-center">
+                <li>{{lodgeName}}</li>
+                <button class="button is-info ml-5" (click)="remove(lodgeName)">remove</button>
+            </div>
+        </ul>
+    </div>
+    <div *ngIf="!currentUser.deposit">
+        <p>Reserve your stay for $20 CAD</p>
+        <app-paypal [username]="currentUser.username" (refreshParent)="ngOnInit()"></app-paypal>
+    </div>
+    <div *ngIf="currentUser.deposit">
+        <p>Thanks for your reservation</p>
+    </div>
 </div>

@@ -26,6 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "ng2-file-upload": "^1.4.0",
     "ngx-cookie-service": "^13.2.0",
+    "ngx-paypal": "^9.0.0",
     "nodemon": "^2.0.15",
     "rxjs": "~7.5.0",
     "sweetalert2": "^11.4.9",
