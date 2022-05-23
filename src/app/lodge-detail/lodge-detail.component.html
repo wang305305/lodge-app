@@ -1,36 +1,54 @@
-<div class="is-flex is-flex-direction-row is-justify-content-space-evenly">
+<div class="is-flex is-flex-direction-row is-justify-content-center">
   <div class="is-two-fifths" style="margin-left:-50px">
     <app-map [data]='mapData' *ngIf="mapData"></app-map>
   </div>
-  <div class="is-half">
+  <div class="is-three-fifths">
     <div class="content has-text-centered" *ngIf="lodgeObj">
-      <h1>Welcome to {{lodgeObj.lodgeName}}</h1>
-      <span  *ngIf="currentUser">
-        <button class="button is-success" *ngIf="!added" ><a (click)="addToWishList(lodgeObj.lodgeName)" style="color:white">Add to Wish List</a></button>
-        <button class="button is-danger" *ngIf="added" ><a (click)="removeFromWishList(lodgeObj.lodgeName)" style="color:white">remove From Wish List</a></button>
-      </span>
-      <ul style="list-style-type: none">
-        <li>Address: {{lodgeObj.streetAddress}}</li>
-        <li>Municipality: {{lodgeObj.municipality}}</li>
-        <li>Province: {{lodgeObj.province}}</li>
-        <li>Canada: {{lodgeObj.country}}</li>
-        <li>Fly In: {{lodgeObj.flyIn}}</li>
-        <li>Owner: {{lodgeObj.owner}}</li>
-        <li>Starting Price: ${{lodgeObj.startingPrice}}/Day</li>
-      </ul>
-      <div class="has-text-centered mt-4">
-        <button class="button is-info" *ngIf="allowEdit" (click)="editLodge()" disabled>Edit</button>
-      </div>
-      <div class="content">
-        <h2>Reviews</h2>
-        <star-rating [starType]="'svg'" [rating]="avg_rating" (starClickChange)="onClickStar($event)" [disabled]="rated"></star-rating>
-        <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
-          <input class="input" type="text" placeholder="Pls input your review here" formControlName="review">
-          <span><button class="button" type="submit" style="margin-top:5px">Submit</button></span>
-        </form>
-        <ul *ngFor="let review of lodgeObj.reviews">
-          <li>{{review}}</li>
-        </ul>
+      <div class="columns">
+        <div class="column is-three-fifths">
+          <div class="box ml-5">
+          <h1>Welcome to {{lodgeObj.lodgeName}}</h1>
+          <span *ngIf="currentUser">
+            <button class="button is-success" *ngIf="!added"><a (click)="addToWishList(lodgeObj.lodgeName)"
+                style="color:white">Add to Wish List</a></button>
+            <button class="button is-danger" *ngIf="added"><a (click)="removeFromWishList(lodgeObj.lodgeName)"
+                style="color:white">remove From Wish List</a></button>
+          </span>
+          <ul style="list-style-type: none">
+            <li>Address: {{lodgeObj.streetAddress}}</li>
+            <li>Municipality: {{lodgeObj.municipality}}</li>
+            <li>Province: {{lodgeObj.province}}</li>
+            <li>Canada: {{lodgeObj.country}}</li>
+            <li>Fly In: {{lodgeObj.flyIn}}</li>
+            <li>Owner: {{lodgeObj.owner}}</li>
+            <li>Starting Price: ${{lodgeObj.startingPrice}}/Day</li>
+          </ul>
+          <div class="has-text-centered mt-4">
+            <button class="button is-info" *ngIf="allowEdit" (click)="editLodge()" disabled>Edit</button>
+          </div>
+        </div>
+        </div>
+        <div class="column is-three-fifths">
+          <div class="content">
+            <div class="box">
+              <h2>Rating</h2>
+              <star-rating [starType]="'svg'" [rating]="avg_rating" (starClickChange)="onClickStar($event)"
+                [disabled]="rated"></star-rating>
+            </div>
+            <div class="box">
+              <h2>Reviews</h2>
+              <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+                <input class="input" type="text" placeholder="Pls input your review here" formControlName="review">
+                <span><button class="button" type="submit" style="margin-top:5px">Submit</button></span>
+              </form>
+
+
+              <ul *ngFor="let review of lodgeObj.reviews" style="list-style-type: none; border-bottom: 1px solid #b4b4b4;">
+                <li>{{review}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

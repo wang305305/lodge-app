@@ -1,0 +1,7 @@
+.column {
+    display: flex;
+  }
+
+  .content ul {
+      margin-left: 0px
+  }
