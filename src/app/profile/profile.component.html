@@ -31,10 +31,13 @@
                         <figure class="image is-128x128 is-rounded mt-6" *ngIf="!profileImage">
                             <i class="fa-solid fa-user"></i>
                        </figure>
-                
                 </div>
                     <div *ngIf="!editProfile">
                         <ul class="is-size-5 has-text-centered">
+                            <li>Email Verified: 
+                                <i class="fa-solid fa-check" *ngIf="currentUser.emailVerified"></i>
+                                <i class="fa-solid fa-xmark" *ngIf="!currentUser.emailVerified"></i>
+                            </li>
                             <li>Username: {{currentUser.username}}</li>
                             <li>Email Address: {{currentUser.email}}</li>
                             <li>First Name: {{currentUser.firstName}}</li>
