@@ -220,4 +220,25 @@ export class AuthService {
     }
     sessionStorage.setItem(key, JSON.stringify(obj));
   }
+
+  obtainToken(username: string) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("username", username);
+    return this.http.get(
+      this.api_url + '/passwordReset',
+      { params: queryParams, withCredentials: true, observe: 'response' as 'response' }
+    ).pipe(
+      catchError(this.handleError<any>('passwordReset', []))
+    )
+  }
+
+  submitNewPassword(body: any) {
+    return this.http.patch(
+      this.api_url + '/updatePassword',
+      body,
+      { withCredentials: true, observe: 'response' as 'response' }
+    ).pipe(
+      catchError(this.handleError<any>('updatePassword', []))
+    )
+  }
 }

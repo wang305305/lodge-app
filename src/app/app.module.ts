@@ -25,6 +25,7 @@ import { LodgeListComponent } from './lodge-list/lodge-list.component';
 import { WishListComponent } from './wish-list/wish-list.component';
 import { PaypalComponent } from './paypal/paypal.component';
 import { NgxPayPalModule } from 'ngx-paypal';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { NgxPayPalModule } from 'ngx-paypal';
     LodgeListComponent,
     WishListComponent,
     PaypalComponent,
+    ForgotPasswordComponent,
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
 import { CreateLodgeComponent } from './create-lodge/create-lodge.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { HomeComponent } from './home/home.component';
 import { LodgeDetailComponent } from './lodge-detail/lodge-detail.component';
 import { LodgeListComponent } from './lodge-list/lodge-list.component';
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'lodgeList', component: LodgeListComponent },
   { path: 'wishList', component: WishListComponent, canActivate: [AuthGuard]},
   { path: 'paypal', component: PaypalComponent},
+  { path: 'forgotPassword', component: ForgotPasswordComponent},
 ];
 
 @NgModule({
